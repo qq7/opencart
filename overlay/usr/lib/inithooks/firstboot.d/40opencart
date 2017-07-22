@@ -1,0 +1,7 @@
+#!/bin/bash -e
+# set opencart admin password, email and domain address
+
+. /etc/default/inithooks
+
+[ -e $INITHOOKS_CONF ] && . $INITHOOKS_CONF
+$INITHOOKS_PATH/bin/opencart.py --pass="$APP_PASS" --email="$APP_EMAIL" --domain="$APP_DOMAIN"
