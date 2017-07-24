@@ -33,6 +33,11 @@ chown www-data:www-data /var/www/opencart -R
 cd $WEBROOT/install
 php cli_install.php install --db_hostname localhost --db_username $DB_USER --db_port 3306 --db_database $DB_NAME --db_driver mysqli --db_password $DB_PASS --username admin --password turnkey --email admin@example.com --http_server TURNKEY_DOMAIN
 rm -r $WEBROOT/install
+mv $WEBROOT/system/storage /var/www/storage
+sed -i "s|'DIR_STORAGE', DIR_SYSTEM . 'storage/'|'DIR_STORAGE', '/var/www/storage/'|" $WEBROOT/config.php
+sed -i "s|'DIR_STORAGE', DIR_SYSTEM . 'storage/'|'DIR_STORAGE', '/var/www/storage/'|" $WEBROOT/admin/config.php
+
+
 
 /etc/init.d/mysql stop
 /etc/init.d/apache2 stop

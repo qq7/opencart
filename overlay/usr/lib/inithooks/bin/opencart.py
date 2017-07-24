@@ -14,7 +14,6 @@ import sys
 import getopt
 import inithooks_cache
 import time
-
 import hashlib
 
 from dialog_wrapper import Dialog
@@ -76,16 +75,6 @@ def main():
                 "Enter domain to serve OpenCart",
                 DEFAULT_DOMAIN)
 
-        def domain_check():
-            if not domain.endswith('/') and not domain.startswith('http://'):
-                return 'http://%s/' % domain
-            elif domain.startswith('https://') and not domain.endswith('/'):
-                return '%s/' % domain.replace('https://', 'http://')
-            elif not domain.endswith('/'):
-                return '%s/' % domain
-        domain = domain_check()
-        domain_https = domain.replace('https://', 'http://')
-
     if domain == "DEFAULT":
         domain = DEFAULT_DOMAIN
 
@@ -94,23 +83,10 @@ def main():
     def php_uniqid(prefix=''):
         return prefix + hex(int(time.time()))[2:10] + hex(int(time.time() * 1000000) % 0x100000)[2:7]
 
-    # calculate password hash and tweak database
-
-    def sed(var, val, conf):
-        system("sed -i \"s|%s|%s|\" %s" % (var, val, conf))
-
-    conf = "/var/www/opencart/config.php"
-    admin_conf = "/var/www/opencart/admin/config.php"
-
-    sed("'HTTP_SERVER', '.*'", "'HTTP_SERVER', '%s'" % domain, conf)
-    sed("'HTTPS_SERVER', '.*'", "'HTTPS_SERVER', '%s'" % domain, conf)
-
-    sed("'HTTP_CATALOG', '.*'", "'HTTP_CATALOG', '%s'" % domain, admin_conf)
-    sed("'HTTPS_CATALOG', '.*'", "'HTTPS_CATALOG', '%s'" % domain_https, admin_conf)
-    sed("'HTTP_SERVER', '.*'", "'HTTP_SERVER', '%sadmin/'" % domain, admin_conf)
-    sed("'HTTPS_SERVER', '.*'", "'HTTPS_SERVER', '%sadmin/'" % domain_https, admin_conf)
-
+    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '[^/]*/?(admin/)?'|\\1 'http\\L\2://%s/\\4'|g\" /var/www/opencart/config.php" % domain)
+    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '[^/]*/?(admin/)?'|\\1 'http\\L\\2://%s/\\4'|g\" /var/www/opencart/admin/config.php" % domain)
     salt = hashlib.md5(php_uniqid(str(randint(100000000, 999999999)))).hexdigest()[:9]
+    # i've used pluses here for better readability
     password_hash = hashlib.sha1(salt + hashlib.sha1(salt + hashlib.sha1(password).hexdigest()).hexdigest()).hexdigest()
 
     m = MySQL()
