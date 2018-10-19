@@ -21,7 +21,6 @@ a2dissite 000-default
 a2ensite opencart
 
 /etc/init.d/mysql start
-/etc/init.d/apache2 start
 
 MYSQL_BATCH="mysql --user=root --password=$MYSQL_PASS --batch"
 MYSQL_ADMIN="mysqladmin --user=root --password=$MYSQL_PASS"
@@ -40,4 +39,3 @@ sed -i "s|'DIR_STORAGE', DIR_SYSTEM . 'storage/'|'DIR_STORAGE', '/var/www/storag
 
 
 /etc/init.d/mysql stop
-/etc/init.d/apache2 stop
