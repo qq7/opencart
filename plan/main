@@ -7,3 +7,5 @@ php-zip
 php-mcrypt
 php-mbstring
 php-xml
+
+zlib1g
