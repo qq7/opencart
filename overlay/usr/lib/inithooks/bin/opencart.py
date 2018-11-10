@@ -63,7 +63,7 @@ def main():
             d = Dialog('TurnKey Linux - First boot configuration')
 
         email = d.get_email(
-            "eZ Platform Email",
+            "OpenCart Email",
             "Enter email address for the eZ Platform 'admin' account.",
             "admin@example.com")
     inithooks_cache.write('APP_EMAIL', email)
@@ -89,7 +89,7 @@ def main():
     system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '[^/]*/?(admin/)?'|\\1 'http\\L\\2://%s/\\4'|g\" /var/www/opencart/config.php" % domain)
     system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '[^/]*/?(admin/)?'|\\1 'http\\L\\2://%s/\\4'|g\" /var/www/opencart/admin/config.php" % domain)
     salt = hashlib.md5(php_uniqid(str(randint(100000000, 999999999)))).hexdigest()[:9]
-    # i've used pluses here for better readability
+
     password_hash = hashlib.sha1(salt + hashlib.sha1(salt + hashlib.sha1(password).hexdigest()).hexdigest()).hexdigest()
 
     m = MySQL()
