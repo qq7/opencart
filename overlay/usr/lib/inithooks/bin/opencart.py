@@ -80,6 +80,9 @@ def main():
 
     inithooks_cache.write('APP_DOMAIN', domain)
 
+    if not domain.startswith('https://') and not domain.startswith('http://'):
+        domain = 'https://'+domain
+    
     def php_uniqid(prefix=''):
         return prefix + hex(int(time.time()))[2:10] + hex(int(time.time() * 1000000) % 0x100000)[2:7]
 
