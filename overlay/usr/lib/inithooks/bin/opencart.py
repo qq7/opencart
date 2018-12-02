@@ -64,7 +64,7 @@ def main():
 
         email = d.get_email(
             "OpenCart Email",
-            "Enter email address for the eZ Platform 'admin' account.",
+            "Enter email address for the OpenCart 'admin' account.",
             "admin@example.com")
     inithooks_cache.write('APP_EMAIL', email)
     if not domain:
@@ -79,15 +79,16 @@ def main():
         domain = DEFAULT_DOMAIN
 
     inithooks_cache.write('APP_DOMAIN', domain)
-
-    if not domain.startswith('https://') and not domain.startswith('http://'):
-        domain = 'https://'+domain
+    
+    domain.replace('https://', '')
+    domain.replace('http://', '')
+    domain.
     
     def php_uniqid(prefix=''):
         return prefix + hex(int(time.time()))[2:10] + hex(int(time.time() * 1000000) % 0x100000)[2:7]
 
-    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '[^/]*/?(admin/)?'|\\1 'http\\L\\2://%s/\\4'|g\" /var/www/opencart/config.php" % domain)
-    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '[^/]*/?(admin/)?'|\\1 'http\\L\\2://%s/\\4'|g\" /var/www/opencart/admin/config.php" % domain)
+    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '.*/?(admin/)?'|\\1 'http\\L\\2://%s/\\4'|g\" /var/www/opencart/config.php" % domain)
+    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '.*/?(admin/)?'|\\1 'http\\L\\2://%s/admin/'|g\" /var/www/opencart/admin/config.php" % domain)
     salt = hashlib.md5(php_uniqid(str(randint(100000000, 999999999)))).hexdigest()[:9]
 
     password_hash = hashlib.sha1(salt + hashlib.sha1(salt + hashlib.sha1(password).hexdigest()).hexdigest()).hexdigest()
