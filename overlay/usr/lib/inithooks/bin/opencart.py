@@ -5,7 +5,7 @@ Option:
     --pass=     unless provided, will ask interactively
     --email=    unless provided, will ask interactively
     --domain=   unless provided, will ask interactively
-        DEFAULT="https://www.example.com"
+                DEFAULT="www.example.com"
 """
 
 import os
@@ -30,7 +30,7 @@ def usage(s=None):
     sys.exit(1)
 
 
-DEFAULT_DOMAIN = "http://example.com/"
+DEFAULT_DOMAIN = "www.example.com"
 
 
 def main():
@@ -52,8 +52,10 @@ def main():
             email = val
         elif opt == '--domain':
             domain = val
+
     if not password:
         d = Dialog('TurnKey Linux - First boot configuration')
+
         password = d.get_password(
             "OpenCart Password",
             "Enter new password for the OpenCart 'admin' account.")
@@ -66,23 +68,21 @@ def main():
             "OpenCart Email",
             "Enter email address for the OpenCart 'admin' account.",
             "admin@example.com")
+
     inithooks_cache.write('APP_EMAIL', email)
+
     if not domain:
         if 'd' not in locals():
             d = Dialog('TurnKey Linux - First boot configuration')
         domain = d.get_input(
                 "OpenCart domain",
                 "Enter domain to serve OpenCart",
-                "example.com")
+                DEFAULT_DOMAIN)
 
     if domain == "DEFAULT":
         domain = DEFAULT_DOMAIN
 
     inithooks_cache.write('APP_DOMAIN', domain)
-    
-    domain.replace('https://', '')
-    domain.replace('http://', '')
-    domain.
     
     def php_uniqid(prefix=''):
         return prefix + hex(int(time.time()))[2:10] + hex(int(time.time() * 1000000) % 0x100000)[2:7]
