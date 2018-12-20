@@ -87,8 +87,9 @@ def main():
     def php_uniqid(prefix=''):
         return prefix + hex(int(time.time()))[2:10] + hex(int(time.time() * 1000000) % 0x100000)[2:7]
 
-    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '.*/?(admin/)?'|\\1 'http\\L\\2://%s/\\4'|g\" /var/www/opencart/config.php" % domain)
-    system("sed -ri \"s|('HTTP(S?)_(SERVER\\|CATALOG)',) '.*/?(admin/)?'|\\1 'http\\L\\2://%s/admin/'|g\" /var/www/opencart/admin/config.php" % domain)
+    system("sed -ri \"s|('HTTP(S?)_SERVER',) '.*'|\\1 'http\\L\\2://%s/'|g\" /var/www/opencart/config.php" % domain)
+    system("sed -ri \"s|('HTTP(S?)_SERVER',) '.*'|\\1 'http\\L\\2://%s/admin/'|g\" /var/www/opencart/admin/config.php" % domain)
+    system("sed -ri \"s|('HTTP(S?)_CATALOG',) '.*'|\\1 'http\\L\\2://%s/'|g\" /var/www/opencart/admin/config.php" % domain)
     salt = hashlib.md5(php_uniqid(str(randint(100000000, 999999999)))).hexdigest()[:9]
 
     password_hash = hashlib.sha1(salt + hashlib.sha1(salt + hashlib.sha1(password).hexdigest()).hexdigest()).hexdigest()
