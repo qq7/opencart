@@ -1,11 +1,8 @@
 #!/bin/bash -ex
 
-dl() {
-    [ "$FAB_HTTP_PROXY" ] && PROXY="--proxy $FAB_HTTP_PROXY"
-    cd $2; curl -L -f -O $PROXY $1; cd -
-}
-
 SRC="/usr/local/src"
 
-dl https://github.com/opencart/opencart/archive/master.tar.gz $SRC
+BRANCH="3.0.x.x_Maintenance"
+REPO_URL="https://github.com/opencart/opencart.git"
 
+git clone --depth 1 --branch $BRANCH $REPO_URL $SRC/opencart
