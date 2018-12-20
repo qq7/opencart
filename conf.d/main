@@ -31,7 +31,7 @@ $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost
 cd $WEBROOT/install
 php cli_install.php install --db_hostname localhost --db_username $DB_USER --db_port 3306 --db_database $DB_NAME --db_driver mysqli --db_password $DB_PASS --username admin --password turnkey --email admin@example.com --http_server $DOMAIN/
 rm -r $WEBROOT/install
-mv $WEBROOT/system/storage /var/www/storage
+mv $WEBROOT/system/storage $STORAGE
 sed -i "s|'DIR_STORAGE', DIR_SYSTEM . 'storage/'|'DIR_STORAGE', '$STORAGE/'|" $WEBROOT/config.php
 sed -i "s|'DIR_STORAGE', DIR_SYSTEM . 'storage/'|'DIR_STORAGE', '$STORAGE/'|" $WEBROOT/admin/config.php
 
