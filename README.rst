@@ -11,7 +11,12 @@ and on top of that:
 
 - OpenCart configurations:
 
-  - Installed from upstream source code to /var/www/opencart and /var/www/storage
+  - Installed from upstream source - `3.0.x.x maintenance branch`_ -
+    to /var/www/opencart and /var/www/opencart-storage.
+
+    **Security note**: Updates to OpenCart may require supervision so
+    they **ARE NOT** configured to install automatically. See the `OpenCart
+    docs`_ for info on updating OpenCart.
   
 - SSL support out of the box.
 - `Adminer`_ administration frontend for MySQL (listening on port
@@ -20,13 +25,15 @@ and on top of that:
   applications (e.g., password recovery)
 - Webmin modules for configuring Apache2, PHP, MySQL and Postfix.
 
-
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
--  Webmin, SSH, MySQL, Adminer: username **root**
--  OpenCart: username is **admin** 
+-  Webmin, SSH, MySQL: username **root**
+-  Adminer: username **adminer**
+-  OpenCart: username **admin**
 
 .. _OpenCart: https://www.opencart.com/
 .. _TurnKey Core: https://www.turnkeylinux.org/core
-.. _Adminer: http://www.adminer.org/
+.. _Adminer: https://www.adminer.org/
+.. _3.0.x.x maintenance branch: https://github.com/opencart/opencart/tree/3.0.x.x_Maintenance
+.. _OpenCart docs: https://docs.opencart.com/en-gb/upgrading/
