@@ -92,6 +92,11 @@ def main():
     system("sed -ri \"s|('HTTP(S?)_CATALOG',) '.*'|\\1 'http\\L\\2://%s/'|g\" /var/www/opencart/admin/config.php" % domain)
     salt = hashlib.md5(php_uniqid(str(randint(100000000, 999999999)))).hexdigest()[:9]
 
+    apache_conf = "/etc/apache2/sites-available/opencart.conf"
+    system("sed -i \"\|RewriteRule|s|https://.*|https://%s/\$1 [R,L]|\" %s" % (domain, apache_conf))
+    system("sed -i \"\|RewriteCond|s|!^.*|!^%s$|\" %s" % (domain, apache_conf))
+    system("service apache2 restart")
+
     password_hash = hashlib.sha1(salt + hashlib.sha1(salt + hashlib.sha1(password).hexdigest()).hexdigest()).hexdigest()
 
     m = MySQL()
