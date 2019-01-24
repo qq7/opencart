@@ -10,8 +10,9 @@ STORAGE=$(dirname $WEBROOT)/opencart-storage
 
 DOMAIN=www.example.com
 
+unzip $SRC/opencart-*.zip -d $SRC/opencart
 mv $SRC/opencart/upload $WEBROOT
-rm -r $SRC/opencart
+rm -r $SRC/opencart*
 
 cd $WEBROOT
 mv $WEBROOT/config-dist.php $WEBROOT/config.php

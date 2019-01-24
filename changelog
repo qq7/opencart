@@ -1,6 +1,9 @@
 turnkey-opencart-15.0 (1) turnkey; urgency=low
 
-    * Initial release of appliance
+    * Initial release of appliance, based on LAMP.
 
- -- Zhenya Hvorostian <zhenya@turnkeylinux.org>  Wed, 9 Jan 2019 19:21:50 +0300
+    * Latest OpenCart stable release (v3.0.3.1) installed from upstream zip
+      archive.
+
+ -- Zhenya Hvorostian <zhenya@turnkeylinux.org>  Wed, 24 Jan 2019 19:21:50 +0300
 
