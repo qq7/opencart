@@ -4,15 +4,15 @@ OpenCart - open source online e-commerce solution.
 `OpenCart`_ is an easy to-use, powerful, Open Source online
 store management program that can manage multiple online
 stores from a single back-end. Administrative area simply 
-by filling in forms and clicking “Save”.
+by filling in forms and clicking "Save".
 
 This appliance includes all the standard features in `TurnKey Core`_,
 and on top of that:
 
 - OpenCart configurations:
 
-  - Installed from upstream source - `3.0.x.x maintenance branch`_ -
-    to /var/www/opencart and /var/www/opencart-storage.
+  - Installed from upstream source zip file to /var/www/opencart and
+    /var/www/opencart-storage.
 
     **Security note**: Updates to OpenCart may require supervision so
     they **ARE NOT** configured to install automatically. See the `OpenCart
@@ -35,5 +35,4 @@ Credentials *(passwords set at first boot)*
 .. _OpenCart: https://www.opencart.com/
 .. _TurnKey Core: https://www.turnkeylinux.org/core
 .. _Adminer: https://www.adminer.org/
-.. _3.0.x.x maintenance branch: https://github.com/opencart/opencart/tree/3.0.x.x_Maintenance
 .. _OpenCart docs: https://docs.opencart.com/en-gb/upgrading/
