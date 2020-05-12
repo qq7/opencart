@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """Set OpenCart admin password, email and domain to serve
 
 Option:
@@ -18,15 +18,15 @@ import hashlib
 
 from dialog_wrapper import Dialog
 from mysqlconf import MySQL
-from executil import system
 from random import randint
+import subprocess
 
 
 def usage(s=None):
     if s:
-        print >> sys.stderr, "Error:", s
-    print >> sys.stderr, "Syntax: %s [options]" % sys.argv[0]
-    print >> sys.stderr, __doc__
+        print("Error:", s, file=sys.stderr)
+    print("Syntax: %s [options]" % sys.argv[0], file=sys.stderr)
+    print(__doc__, file=sys.stderr)
     sys.exit(1)
 
 
@@ -37,7 +37,7 @@ def main():
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h",
                                        ['help', 'pass=', 'email=', 'domain='])
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         usage(e)
 
     password = ""
@@ -87,22 +87,30 @@ def main():
     def php_uniqid(prefix=''):
         return prefix + hex(int(time.time()))[2:10] + hex(int(time.time() * 1000000) % 0x100000)[2:7]
 
-    system("sed -ri \"s|('HTTP(S?)_SERVER',) '.*'|\\1 'http\\L\\2://%s/'|g\" /var/www/opencart/config.php" % domain)
-    system("sed -ri \"s|('HTTP(S?)_SERVER',) '.*'|\\1 'http\\L\\2://%s/admin/'|g\" /var/www/opencart/admin/config.php" % domain)
-    system("sed -ri \"s|('HTTP(S?)_CATALOG',) '.*'|\\1 'http\\L\\2://%s/'|g\" /var/www/opencart/admin/config.php" % domain)
-    salt = hashlib.md5(php_uniqid(str(randint(100000000, 999999999)))).hexdigest()[:9]
+    subprocess.run(["sed", "-ri",
+        "s|('HTTP(S?)_SERVER',) '.*'|\\1 'http\\L\\2://%s/'|g" % domain,
+        "/var/www/opencart/config.php"])
+    subprocess.run(["sed", "-ri",
+        "s|('HTTP(S?)_SERVER',) '.*'|\\1 'http\\L\\2://%s/admin/'|g" % domain, 
+        "/var/www/opencart/admin/config.php"])
+    subprocess.run(["sed", "-ri",
+        "s|('HTTP(S?)_CATALOG',) '.*'|\\1 'http\\L\\2://%s/'|g" % domain,
+        "/var/www/opencart/admin/config.php"])
+    salt = hashlib.md5(php_uniqid(str(randint(100000000, 999999999))).encode('utf8')).hexdigest()[:9]
 
     apache_conf = "/etc/apache2/sites-available/opencart.conf"
-    system("sed -i \"\|RewriteRule|s|https://.*|https://%s/\$1 [R,L]|\" %s" % (domain, apache_conf))
-    system("sed -i \"\|RewriteCond|s|!^.*|!^%s$|\" %s" % (domain, apache_conf))
-    system("service apache2 restart")
+    subprocess.run(["sed", "-i", "\|RewriteRule|s|https://.*|https://%s/\$1 [R,L]|" % domain, apache_conf])
+    subprocess.run(["sed", "-i", "\|RewriteCond|s|!^.*|!^%s$|" % domain, apache_conf])
+    subprocess.run(["service", "apache2", "restart"])
 
-    password_hash = hashlib.sha1(salt + hashlib.sha1(salt + hashlib.sha1(password).hexdigest()).hexdigest()).hexdigest()
+    password_hash = hashlib.sha1(password.encode('utf8')).hexdigest()
+    password_hash = hashlib.sha1((salt + password_hash).encode('utf8')).hexdigest()
+    password_hash = hashlib.sha1((salt + password_hash).encode('utf8')).hexdigest()
 
     m = MySQL()
-    m.execute('UPDATE opencart.oc_user SET email="%s" WHERE username="admin"' % email)
-    m.execute('UPDATE opencart.oc_user SET password="%s" WHERE username="admin"' % password_hash)
-    m.execute('UPDATE opencart.oc_user SET salt="%s" WHERE username="admin"' % salt)
+    m.execute('UPDATE opencart.oc_user SET email=%s WHERE username="admin"', (email,))
+    m.execute('UPDATE opencart.oc_user SET password=%s WHERE username="admin"', (password_hash,))
+    m.execute('UPDATE opencart.oc_user SET salt=%s WHERE username="admin"', (salt,))
 
 if __name__ == "__main__":
     main()

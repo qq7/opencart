@@ -4,7 +4,6 @@
 php-gd
 php-curl
 php-zip
-php-mcrypt
 php-mbstring
 php-xml
 
