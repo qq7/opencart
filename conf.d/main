@@ -21,6 +21,7 @@ mv $WEBROOT/admin/config-dist.php $WEBROOT/admin/config.php
 a2dissite 000-default
 a2ensite opencart
 a2enmod rewrite
+a2enmod headers
 
 service mysql start
 
