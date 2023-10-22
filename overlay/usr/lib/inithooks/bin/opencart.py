@@ -15,7 +15,6 @@ import getopt
 from passlib.apps import phpass_context
 from libinithooks import inithooks_cache
 import time
-import hashlib
 
 from libinithooks.dialog_wrapper import Dialog
 from mysqlconf import MySQL

@@ -6,7 +6,7 @@ DB_PASS=$(mcookie)
 
 SRC=/usr/local/src
 WEBROOT=/var/www/opencart
-STORAGE=/var/www/opencart-storage
+STORAGE=$(dirname $WEBROOT)/opencart-storage
 
 DOMAIN=www.example.com
 
